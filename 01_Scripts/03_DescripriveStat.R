@@ -13,17 +13,6 @@ library(corrplot)
 library(ggcorrplot)
 
 
-# git remote add origin https://github.com/Roberts82/LU_Masters_Thesis.git
-# git branch -M main
-# git push -u origin main
-# 
-# git branch --set-upstream-to=origin/<branch> main
-
-git branch --set-upstream-to=7f752a1 main
-
-git push -u origin HEAD
-
-19-11-35-81_timeSeries.csv
 
 #to filter out unnecessary values
 unique(DttsPlm$teritorija)

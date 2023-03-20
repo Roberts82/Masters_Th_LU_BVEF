@@ -1,0 +1,96 @@
+#example from tidyr package
+netflix_df %>% 
+  # Split the duration column into value and unit columns
+  separate(duration, into = c("value", "unit"), sep = " ", convert = TRUE)
+
+#example
+phone_nr_df %>%
+  # Unite the country_code and national_number columns
+  unite("international_number", "country_code", "national_number", sep = " ")
+
+#example
+tvshow_df %>% 
+  # Separate the actors in the cast column over multiple rows
+  separate_rows(cast, sep = ", ") %>% 
+  rename(actor = cast) %>% 
+  count(actor, sort = TRUE) %>% 
+  head()
+
+Do I need to keep data with summaries? (kopā, kopā ES etc)?
+
+https://www.youtube.com/watch?v=XRd2E-F0IGE - about wide data and long data formats. How to change the formal in dplyr
+
+šis ir izdzēsts, jo  nedarbojās vai neizmantots:
+unique(inw_lv_00_20$teritorija, inw_lv_92_mil$teritorija)
+all_equal(inw_lv_00_20, inw_lv_92_mil)
+alike(inw_lv_00_20, inw_lv_92_mil)
+anti_join(inw_lv_00_20, inw_lv_92_mil, by=c("teritorija"="Valsts"), character())
+union(inw_lv_00_20$teritorija, inw_lv_92_mil$teritorija)
+union_all(inw_lv_00_20$teritorija, inw_lv_92_mil)
+
+
+
+izdzēstais teksts
+
+#bind 92-99 data to 20-2022 data
+Full_Inw <- bind_rows(inw_lv_00_20, inw_lv_92_mil_1)%>%
+  arrange(teritorija, Year)
+
+#To filter out all data on non-country? Maybe can be left for now, but decided later when working with models.
+#Maybe will be needed to calculate %. Maybe will be needed to align the names of 2 data sets.
+#Not a bad idea to leave it as row as possible now. NAs are left as well.
+unique(Full_Inw$teritorija)
+
+#add column to the merged data set with date in the right format (to be able to extract the year of effect)
+library(lubridate)
+k1 <- konvsardf2 %>%
+  mutate(Piemērojama=as.Date(Piemērojama, "%d.%m.%y")) %>%
+  mutate(KonvPiemGads=as.numeric(year(Piemērojama)))
+k1
+
+#just to check the data type
+class(k1$Piemērojama)
+class(konvsardf1)
+
+#select the columns (names of jurisdictions and years when DTTs became effective in respect
+#to a particular jurisdiction) to be able join the data to the main data set in the next steps
+inforce <- k1 %>% select(1, 6)
+
+#to join the column on the years when DTTs became effective
+Full_Inw1 <- left_join(Full_Inw, inforce, by=c("teritorija"="Valsts"), character())
+
+#to calculate the number of years DTTs were in force regarding each year of each jurisdiction
+Full_Inw2 <- mutate(Full_Inw1, KonvGadi=as.numeric(Year)-as.numeric(KonvPiemGads)+1)
+#replace NAs with 0s first
+index <- is.na(Full_Inw2$KonvGadi)
+Full_Inw2$KonvGadi[index] <- 0
+#remove negative number KonvGadi (to replace them with "0")
+Full_Inw2$KonvGadi[Full_Inw2$KonvGadi<0] <- 0
+
+#kur tik lielas atšķirības 1992.gada un 2000.gada datiem? Varbūt par pamatu tika ņemts, kādās cenās? Vai tomēr metodoloģijam maināijās?
+#set up github? Vai tomēr nav šo atšķirību?
+
+#Vai tabulā pirms logarifmēšanas nevajaga 0 un negatīvajām vērtībām noteikt lielumu 0.1, kā tas izdarīts Berthel etc. pētījumā?
+#log of FDI
+Full_Inw3 <- mutate(Full_Inw2, "FDI_log"=log(FDI)) %>%
+  relocate(FDI_log, .after = FDI)
+Full_Inw3
+#varbūt nākamajā solī savienot kur iespējams komandas, lai nav visu laiku jāmaina faila nosaukums
+#un lai viss būtu vienkopus. Komentārus var kaut vai sānā. Tas padarīs gan 
+#par pārskatāmāku visu, gan palielinās elastību, jo daudz mazāk būs jālabo vis, līdz
+#ar ko varēs paspēt vairāk eksperimentēt
+#šajā sakarā paskatīties uz labiem piemēriem koda struktūrai arī grāmatās un internetā.
+
+
+dzestie kodi:
+k1 <- unique(DataFDI_LV_DTT["kods"])
+v1 <- unique(DataFDI_LV_DTT["teritorija"])
+k1v1 <- left_join(k1, v1, by=NULL)
+
+#kļūdains rezultāts - sajaukta secība
+KSaraksts <- unique(DataFDI_LV_DTT$kods)
+KSaraksts <- KSaraksts[1:151]
+VSaraksts <- unique(DataFDI_LV_DTT$teritorija)
+VSaraksts <- VSaraksts[1:151]
+ValKodi <- as.data.frame(KSaraksts, VSaraksts)
+ValKodi

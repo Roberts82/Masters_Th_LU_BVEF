@@ -50,4 +50,3 @@ dtts.re <- plm(FDI ~ KonvGadi, data = ForPlm, model = "random")
 summary(dtts.fe)
 summary(dtts.re)
 ```
-

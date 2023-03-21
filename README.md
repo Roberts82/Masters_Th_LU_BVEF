@@ -2,6 +2,8 @@
 
 This project was my first R project and it was created to ensure calculations for my Masters Theses at the University of Latvia. The Master Theses were defended in June 2022.
 
+*The title of the Masters Thesis is "The Impact of Double Tax Treaties and Tax Burden on Repatriation of Profits to Foreign Investors on Foreign Direct Investments to Latvia"*
+
 ANNOTATION (of the Masters Thsis)
 Latvia has a relatively wide network of double tax treaties. These treaties are usually concluded with the aim to eliminate double taxation, thus, to promote foreign direct investment to Latvia. However, so far the question of whether double tax treaties promote foreign direct investment in Latvia has not been widely studied. In this work, the author studied the relationship between the existence of double tax treaties (taking into account different characteristics of the respective treaties) and foreign direct investment in Latvia. Impact of certain tax factors on foreign investment in Latvia has also been examined.
 Using the panel data model, information on foreign direct investment from all countries to Latvia (for which information is publicly available for the period from 1992 to 2020) has been analysed, and evidence of a close relationship between the existence of a double tax treaty and foreign direct investment has been obtained.
